@@ -26,6 +26,7 @@ function directory=dr_set_directory()
 
 %directory='/Users/restrepd/Documents/Projects/Gould/T1040080114_wt_set1';
 %directory='/Users/restrepd/Documents/Projects/Daniel/matlabprocessdatabatchprogram/acetotheylben/nolaser/159863';
-directory='/Users/restrepd/Documents/Projects/Justin/INTANtest';
-%directory='/Users/restrepd/Documents/Projects/Ming/6203/051817';
+%directory='/Users/restrepd/Documents/Projects/Justin/INTANtest';
+%directory='/Users/restrepd/Documents/Projects/Ming/6203/052517';
+directory='/Volumes/Seagate_Backup_Plus_Drive/Ming/6203/052517';
 %directory='/Users/restrepd/Documents/Projects/INTAN/462017'
