@@ -73,7 +73,7 @@ fclose(fid);
 [str,maxsize,endian]=computer;
 handles.par.system=str;
 
-
+ 
 switch handles.par.system
     case {'PCWIN','PCWIN64'}
         if exist([pwd '\cluster.exe'])==0

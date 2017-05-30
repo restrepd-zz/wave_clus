@@ -129,7 +129,7 @@ set(handles.fix2_button,'value',0);
 set(handles.fix3_button,'value',0);
 
 pack;
-[filename, pathname] = uigetfile('*.mat','Select joint_ file');
+[filename, pathname] = uigetfile('joint*.mat','Select joint_ file');
 
 if exist([pathname filename(7:end-3) 'dg'])==2
     handles.datatype='dg (joint)';
@@ -155,12 +155,15 @@ switch char(handles.datatype)
         
         
         axes(handles.cont_data); cla
-        
+         
         %Load spikes and parameters
         eval(['load ' filename ';']);
         sub_directory=[pathname filename(7:end-4)];
-        file_to_cluster = char(fls(1));
+        if exist('fls','var')==1
+            file_to_cluster = char(fls(1));
+        end
         load([file_to_cluster(1:end-3),'.mat']);
+        
         handles.draq_p=params;
         handles.draq_d=data;
         handles.drta_p=drta_p;
@@ -273,7 +276,9 @@ switch char(handles.datatype)
         %Load spikes and parameters
         eval(['load ' filename ';']);
         sub_directory=[pathname filename(7:end-4)];
-        file_to_cluster = char(fls(1));
+        if exist('fls','var')==1
+            file_to_cluster = char(fls(1));
+        end
         load([file_to_cluster(1:end-4),'.mat']);
         handles.draq_p=params;
         handles.draq_d=data;
@@ -386,7 +391,9 @@ switch char(handles.datatype)
         %Load spikes and parameters
         eval(['load ' filename ';']);
         sub_directory=[pathname filename(7:end-4)];
-        file_to_cluster = char(fls(1));
+        if exist('fls','var')==1
+            file_to_cluster = char(fls(1));
+        end
         load([file_to_cluster,'.mat']);
         handles.draq_p=params;
         handles.draq_d=data;
@@ -647,15 +654,25 @@ switch char(handles.datatype)
         units_per_tet=handles.units_per_tet;
         
         %save joint file
-        save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
-            'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
+        if exist('fls','var')==1
+            save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
+                'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
+            no_files=num_files{1};
+        else
+            save(handles.org_filename, 'num_files', 'file_to_cluster','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
+                'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
+             no_files=num_files;
+        end
         
         noSpikes=[];
-        for filNum=1:num_files{1}
+        for filNum=1:no_files
             
-            dg_file=char(fls(filNum));
-            
-            jt_times_file=['jt_times_' dg_file(1:end-3) '.mat'];
+            if exist('fls','var')==1
+                dg_file=char(fls(filNum));
+                jt_times_file=['jt_times_' dg_file(1:end-3) '.mat'];
+            else
+                jt_times_file=['jt_times_' file_to_cluster(1:end-3) '.mat'];
+            end
             
             
             load(jt_times_file);
@@ -731,15 +748,25 @@ switch char(handles.datatype)
         units_per_tet=handles.units_per_tet;
         
         %save joint file
-        save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
-            'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
+        if exist('fls','var')==1
+            save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
+                'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
+            no_files=num_files{1};
+        else
+            save(handles.org_filename, 'num_files', 'file_to_cluster','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
+                'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
+            no_files=num_files;
+        end
         
         noSpikes=[];
-        for filNum=1:num_files{1}
+        for filNum=1:no_files
             
-            dg_file=char(fls(filNum));
-            
-            jt_times_file=['jt_times_' dg_file(1:end-4) '.mat'];
+            if exist('fls','var')==1
+                dg_file=char(fls(filNum));
+                jt_times_file=['jt_times_' dg_file(1:end-4) '.mat'];
+            else
+                jt_times_file=['jt_times_' file_to_cluster(1:end-4) '.mat'];
+            end
             
             
             load(jt_times_file);
@@ -811,16 +838,24 @@ switch char(handles.datatype)
         
         cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
-        
-        save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','all_timestamp',...
-            'cluster_class','offset_for_chan', 'noSpikes');
+        if exist('fls','var')==1
+            save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','all_timestamp',...
+                'cluster_class','offset_for_chan', 'noSpikes');
+        else
+            save(handles.org_filename, 'num_files', 'file_to_cluster','directory','sub_directory','offset_chan_file', 'noSpikesChFl','all_timestamp',...
+                'cluster_class','offset_for_chan', 'noSpikes');
+        end
         
         noSpikes=[];
         for filNum=1:num_files{1}
             
-            dra_file=char(fls(filNum));
-            
-            jt_times_file=['jt_times_' dra_file(1:end-4) '.mat'];
+            if exist('fls','var')==1
+                dra_file=char(fls(filNum));
+                
+                jt_times_file=['jt_times_' dra_file(1:end-4) '.mat'];
+            else
+                jt_times_file=['jt_times_' file_to_cluster(1:end-4) '.mat'];
+            end
             
             
             load(jt_times_file);
