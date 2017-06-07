@@ -185,8 +185,18 @@ switch char(handles.datatype)
         set(handles.tetrode,'string',answr{1});
         drta_p.which_display=handles.drta_p.which_display;
         spk_times=[];
-        spk_times(1:noSpikes(handles.drta_p.which_display))=all_timestamp(offset_for_chan(handles.drta_p.which_display)+...
-            1:offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
+        this_cluster_class=[];
+        ii_spikes=1;
+        for filNum=1:num_files
+            spk_times(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1)=all_timestamp(offset_chan_file(filNum,handles.drta_p.which_display)+1 ...
+                :offset_chan_file(filNum,handles.drta_p.which_display)+noSpikesChFl(filNum,handles.drta_p.which_display));
+            this_cluster_class(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1)=cluster_class(offset_chan_file(filNum,handles.drta_p.which_display) +1 ...
+                :offset_chan_file(filNum,handles.drta_p.which_display)+noSpikesChFl(filNum,handles.drta_p.which_display));
+            ii_spikes=ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display);
+        end
+%         spk_times=[];
+%         spk_times(1:noSpikes(handles.drta_p.which_display))=all_timestamp(offset_for_chan(handles.drta_p.which_display)+...
+%             1:offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
         spk_times=spk_times*1000;
         
         %Load clustering results
@@ -221,8 +231,9 @@ switch char(handles.datatype)
         USER_DATA{1}=handles.par;
         USER_DATA{3} = spk_times(:)';
         USER_DATA{4} = clu;        USER_DATA{5} = tree;
-        USER_DATA{6} = cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
-            offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
+        USER_DATA{6} = this_cluster_class(:)';
+%         USER_DATA{6} = cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
+%             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
         USER_DATA{7} = inspk;
         set(handles.wave_clus_figure,'userdata',USER_DATA);
         cd (pathname);
@@ -301,9 +312,18 @@ switch char(handles.datatype)
         set(handles.tetrode,'string',answr{1});
         drta_p.which_display=handles.drta_p.which_display;
         spk_times=[];
-        spk_times(1:noSpikes(handles.drta_p.which_display))=all_timestamp(offset_for_chan(handles.drta_p.which_display)+...
-            1:offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
-        spk_times=spk_times*1000;
+        this_cluster_class=[];
+        ii_spikes=1;
+        for filNum=1:num_files
+            spk_times(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1)=all_timestamp(offset_chan_file(filNum,handles.drta_p.which_display)+1 ...
+                :offset_chan_file(filNum,handles.drta_p.which_display)+noSpikesChFl(filNum,handles.drta_p.which_display));
+            this_cluster_class(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1)=cluster_class(offset_chan_file(filNum,handles.drta_p.which_display) +1 ...
+                :offset_chan_file(filNum,handles.drta_p.which_display)+noSpikesChFl(filNum,handles.drta_p.which_display));
+            ii_spikes=ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display);
+        end
+%         spk_times(1:noSpikes(handles.drta_p.which_display))=all_timestamp(offset_for_chan(handles.drta_p.which_display)+...
+%             1:offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
+         spk_times=spk_times*1000;
         
         %Load clustering results
         cd(sub_directory)
@@ -337,8 +357,9 @@ switch char(handles.datatype)
         USER_DATA{1}=handles.par;
         USER_DATA{3} = spk_times(:)';
         USER_DATA{4} = clu;        USER_DATA{5} = tree;
-        USER_DATA{6} = cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
-            offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
+%         USER_DATA{6} = cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
+%             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display));
+        USER_DATA{6} = this_cluster_class(:)';
         USER_DATA{7} = inspk;
         set(handles.wave_clus_figure,'userdata',USER_DATA);
         cd (pathname);
@@ -648,8 +669,17 @@ switch char(handles.datatype)
         load(handles.org_filename);
         chNo=handles.drta_p.which_display;
         
-        cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
-            offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
+%         cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
+%             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
+%         
+        ii_spikes=1;
+        for filNum=1:num_files
+            cluster_class(offset_chan_file(filNum,handles.drta_p.which_display)+1 ...
+                :offset_chan_file(filNum,handles.drta_p.which_display)...
+                +noSpikesChFl(filNum,handles.drta_p.which_display))=...
+                classes(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1);
+            ii_spikes=ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display);
+        end
         
         units_per_tet=handles.units_per_tet;
         
@@ -742,27 +772,34 @@ switch char(handles.datatype)
         load(handles.org_filename);
         chNo=handles.drta_p.which_display;
         
-        cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
-            offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
+        ii_spikes=1;
+        for filNum=1:num_files
+            cluster_class(offset_chan_file(filNum,handles.drta_p.which_display)+1 ...
+                :offset_chan_file(filNum,handles.drta_p.which_display)...
+                +noSpikesChFl(filNum,handles.drta_p.which_display))=...
+                classes(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1);
+            ii_spikes=ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display);
+        end
         
+%         cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
+%             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
+%         
         units_per_tet=handles.units_per_tet;
         
         %save joint file
         if exist('fls','var')==1
-            save(handles.org_filename, 'num_files', 'fls','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
+            save(handles.org_filename, 'fls','num_files','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
                 'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
-            no_files=num_files{1};
         else
             save(handles.org_filename, 'num_files', 'file_to_cluster','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
                 'cluster_class','offset_for_chan', 'noSpikes','units_per_tet');
-            no_files=num_files;
         end
         
         noSpikes=[];
-        for filNum=1:no_files
+        for filNum=1:num_files
             
             if exist('fls','var')==1
-                dg_file=char(fls(filNum));
+                dg_file=fls{filNum};
                 jt_times_file=['jt_times_' dg_file(1:end-4) '.mat'];
             else
                 jt_times_file=['jt_times_' file_to_cluster(1:end-4) '.mat'];

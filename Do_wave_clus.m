@@ -132,9 +132,9 @@ num_files=handles.numfiles;
 cd(directory);
 
 
-handles.drta_p.draName=handles.files{1};
-handles.drta_p.fullName=handles.files{1};
-file_to_cluster = handles.files{1};
+handles.drta_p.draName=handles.files{end};
+handles.drta_p.fullName=handles.files{end};
+file_to_cluster = handles.files{end};
 %     end
 if ismac
     sub_directory=[directory '/' handles.drta_p.fullName(1:end-3)];
@@ -238,7 +238,7 @@ if an_error==0
             file_end_sz=sz_ts(2);
             offset_chan_file(filNum,tets)=timestamp_offset+file_start_sz;
             noSpikesChFl(filNum,tets)=file_end_sz-file_start_sz;
-            %fclose(handles.drta_p.fullName);
+            
         end
         
         
@@ -646,9 +646,9 @@ num_files=handles.numfiles;
 cd(directory);
 
 
-handles.drta_p.draName=handles.files{1};
-handles.drta_p.fullName=handles.files{1};
-file_to_cluster = handles.files{1};
+handles.drta_p.draName=handles.files{end};
+handles.drta_p.fullName=handles.files{end};
+file_to_cluster = handles.files{end};
 %     end
 if ismac
     sub_directory=[directory '/' handles.drta_p.fullName(1:end-4)];
@@ -712,7 +712,7 @@ if an_error==0
             handles.drta_p.tets=tets;
             sz_ts=size(timestamp);
             file_start_sz=sz_ts(2);
-            
+             
             for ii=1:handles.draq_d.noTrials
                 %for ii=1:2
                 trial_number=ii
@@ -1037,8 +1037,9 @@ if an_error==0
         
         %The joint_ file is used by wave_clus to process spikes using the output
         %produced here by cluster.exe
+        fls=handles.files;
         outfile=['joint_' handles.drta_p.fullName(1:end-4) '.mat'];
-        save(outfile, 'num_files', 'file_to_cluster','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
+        save(outfile, 'fls','num_files', 'file_to_cluster','directory','sub_directory','offset_chan_file', 'noSpikesChFl','spikesExcluded','all_timestamp',...
             'cluster_class','offset_for_chan', 'noSpikes');
         
         
@@ -1130,14 +1131,23 @@ else
     handles.numfiles=length(handles.files);
 end
 
-first_file=handles.files{1};
- 
-set(handles.whichFile,'String',first_file);
+there_is_a_space = findSpaces(handles);
 
-if strcmp(first_file(end-2:end),'rhd')
-    load_run_rhd_Callback(hObject, eventdata, handles);
-end
-
-if strcmp(first_file(end-2:end),'.dg')
-    load_run_dg_Callback(hObject, eventdata, handles);
+if there_is_a_space==1
+    h=msgbox('There is a space in either the directory or the filename, please fix!!"')
+else
+    
+    first_file=handles.files{1};
+    
+    set(handles.whichFile,'String',first_file);
+    
+    if strcmp(first_file(end-2:end),'rhd')
+        load_run_rhd_Callback(hObject, eventdata, handles);
+    end
+    
+    if strcmp(first_file(end-2:end),'.dg')
+        load_run_dg_Callback(hObject, eventdata, handles);
+    end
+    
+    
 end
