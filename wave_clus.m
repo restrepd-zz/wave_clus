@@ -187,7 +187,12 @@ switch char(handles.datatype)
         spk_times=[];
         this_cluster_class=[];
         ii_spikes=1;
-        for filNum=1:num_files
+        if iscell(num_files)
+            no_files=num_files{1};
+        else
+            no_files=num_files;
+        end
+        for filNum=1:no_files
             spk_times(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1)=all_timestamp(offset_chan_file(filNum,handles.drta_p.which_display)+1 ...
                 :offset_chan_file(filNum,handles.drta_p.which_display)+noSpikesChFl(filNum,handles.drta_p.which_display));
             this_cluster_class(ii_spikes:ii_spikes+noSpikesChFl(filNum,handles.drta_p.which_display)-1)=cluster_class(offset_chan_file(filNum,handles.drta_p.which_display) +1 ...
@@ -669,11 +674,16 @@ switch char(handles.datatype)
         load(handles.org_filename);
         chNo=handles.drta_p.which_display;
         
-%         cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
-%             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
-%         
+        %         cluster_class(offset_for_chan(handles.drta_p.which_display)+1:...
+        %             offset_for_chan(handles.drta_p.which_display)+noSpikes(handles.drta_p.which_display))=classes';
+        %
         ii_spikes=1;
-        for filNum=1:num_files
+        if iscell(num_files)
+            no_files=num_files{1};
+        else
+            no_files=num_files;
+        end
+        for filNum=1:no_files
             cluster_class(offset_chan_file(filNum,handles.drta_p.which_display)+1 ...
                 :offset_chan_file(filNum,handles.drta_p.which_display)...
                 +noSpikesChFl(filNum,handles.drta_p.which_display))=...
@@ -804,7 +814,7 @@ switch char(handles.datatype)
             else
                 jt_times_file=['jt_times_' file_to_cluster(1:end-4) '.mat'];
             end
-            
+             
             
             load(jt_times_file);
             noSpikes(1,1:4)=noSpikesChFl(filNum,1:4);

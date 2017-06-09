@@ -50,41 +50,55 @@ fclose(fid);
 [str,maxsize,endian]=computer;
 handles.par.system=str;
 
- 
-switch handles.par.system
-    case {'PCWIN','PCWIN64'}
-        if exist([pwd '\cluster.exe'])==0
-            directory = which('cluster.exe');
-            copyfile(directory,pwd);
-        end
-        dos(sprintf('cluster.exe %s.run',fname));
-    case {'MAC'}
-        if exist([pwd '/cluster_mac.exe'])==0
-            directory = which('cluster_mac.exe');
-            copyfile(directory,pwd);
-        end
-        run_mac = sprintf('./cluster_mac.exe %s.run',fname);
-        unix(run_mac);
-    case {'MACI','MACI64'}
-        if exist([pwd '/cluster_maci.exe'])==0
-            directory = which('cluster_maci.exe');
-            copyfile(directory,pwd);
-        end
-        %run_maci = sprintf([pwd '/cluster_maci.exe %s.run'],fname);
-        system(['chmod u+x ' pwd '/cluster_maci.exe']);
-        run_maci = sprintf('./cluster_maci.exe %s.run',fname);
-        unix(run_maci);
-    otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
-        if exist([pwd '/cluster_linux.exe'])==0
-            directory = which('cluster_linux.exe');
-            copyfile(directory,pwd);
-        end
-        run_linux = sprintf('./cluster_linux.exe %s.run',fname);
-        unix(run_linux);
+% Strange, when clu=load([fname... is run there is sometimes the following
+% error: ./cluster_maci.exe times_tetr1_170530_144920_6203.run: Segmentation fault
+% If one runs it again it does not happen. For now I have a while loop
+
+keep_clustering=1;
+ii_clust=0;
+while keep_clustering==1
+    switch handles.par.system
+        case {'PCWIN','PCWIN64'}
+            if exist([pwd '\cluster.exe'])==0
+                directory = which('cluster.exe');
+                copyfile(directory,pwd);
+            end
+            dos(sprintf('cluster.exe %s.run',fname));
+        case {'MAC'}
+            if exist([pwd '/cluster_mac.exe'])==0
+                directory = which('cluster_mac.exe');
+                copyfile(directory,pwd);
+            end
+            run_mac = sprintf('./cluster_mac.exe %s.run',fname);
+            unix(run_mac);
+        case {'MACI','MACI64'}
+            if exist([pwd '/cluster_maci.exe'])==0
+                directory = which('cluster_maci.exe');
+                copyfile(directory,pwd);
+            end
+            %run_maci = sprintf([pwd '/cluster_maci.exe %s.run'],fname);
+            system(['chmod u+x ' pwd '/cluster_maci.exe']);
+            run_maci = sprintf('./cluster_maci.exe %s.run',fname);
+            unix(run_maci);
+        otherwise  %(GLNX86, GLNXA64, GLNXI64 correspond to linux)
+            if exist([pwd '/cluster_linux.exe'])==0
+                directory = which('cluster_linux.exe');
+                copyfile(directory,pwd);
+            end
+            run_linux = sprintf('./cluster_linux.exe %s.run',fname);
+            unix(run_linux);
+    end
+    
+    try
+        clu=load([fname '.dg_01.lab']);
+        keep_clustering=0;
+    catch
+        ii_clust=ii_clust+1;
+    end
+    if ii_clust>4
+        keep_clustering=0;
+    end
 end
-
-
-clu=load([fname '.dg_01.lab']);
 tree=load([fname '.dg_01']);
 delete(sprintf('%s.run',fname));
 delete *.mag
