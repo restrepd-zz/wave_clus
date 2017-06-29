@@ -148,8 +148,15 @@ for jj=1:inputs
     
 end
 
+switch handles.dg_or_rhd
+    case 1
+        %dg
+        fig_name=[handles.directory '/' handles.drta_p.fullName(1:end-3) '/feat_fig2print_tetr' num2str(handles.drta_p.tets) handles.drta_p.fullName '.jpg'];
+    case 2
+        %rhd
+        fig_name=[handles.directory '/' handles.drta_p.fullName(1:end-4) '/feat_fig2print_tetr' num2str(handles.drta_p.tets) handles.drta_p.fullName '.jpg'];
+end
 
-fig_name=[handles.directory '/' handles.drta_p.fullName(1:end-4) '/feat_fig2print_tetr' num2str(handles.drta_p.tets) handles.drta_p.fullName '.jpg'];
 saveas(figure(2),fig_name,'jpeg')
 
 %CREATES INPUT MATRIX FOR SPC

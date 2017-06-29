@@ -508,8 +508,15 @@ if an_error==0
             title([char(file_to_cluster) ' ch ' num2str(tets)],'Interpreter','none','Fontsize',14)
             features_name = handles.par.features;
             
-
-            fig_name=[handles.directory '/' handles.drta_p.fullName(1:end-4) '/wave_fig2print_tetr' num2str(handles.drta_p.tets) handles.drta_p.fullName '.jpg'];
+            switch handles.dg_or_rhd
+                case 1
+                    %dg
+                    fig_name=[handles.directory '/' handles.drta_p.fullName(1:end-3) '/wave_fig2print_tetr' num2str(handles.drta_p.tets) handles.drta_p.fullName '.jpg'];
+                case 2
+                    %rhd
+                    fig_name=[handles.directory '/' handles.drta_p.fullName(1:end-4) '/wave_fig2print_tetr' num2str(handles.drta_p.tets) handles.drta_p.fullName '.jpg'];
+            end
+            
             saveas(figure(1),fig_name,'jpeg')
             
             cluster_class(timestamp_offset+1:timestamp_offset+szspikes(1),1:2) = drcluster(1:szspikes(1),1:2);
@@ -1142,10 +1149,12 @@ else
     set(handles.whichFile,'String',first_file);
     
     if strcmp(first_file(end-2:end),'rhd')
+        handles.dg_or_rhd=2;
         load_run_rhd_Callback(hObject, eventdata, handles);
     end
     
     if strcmp(first_file(end-2:end),'.dg')
+        handles.dg_or_rhd=1;
         load_run_dg_Callback(hObject, eventdata, handles);
     end
     
