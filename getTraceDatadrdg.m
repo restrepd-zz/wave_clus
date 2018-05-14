@@ -1,4 +1,4 @@
-function [data, exc_ch]=getTraceDatadrdg(handles)
+function [data, data_sub, exc_ch]=getTraceDatadrdg(handles)
 % Gets data for one trial
 
 if handles.par.dgorrhd==1
@@ -12,14 +12,15 @@ if handles.par.dgorrhd==1
         data_this_trial=handles.draq_d.data(floor(handles.draq_p.ActualRate*handles.draq_p.sec_per_trigger*handles.draq_p.no_chans*(trialNo-1)+1):...
             floor(handles.draq_p.ActualRate*handles.draq_p.sec_per_trigger*handles.draq_p.no_chans*trialNo)-2000);
         
-        
         data=[];
         for ii=1+4*(handles.drta_p.tets-1):4+4*(handles.drta_p.tets-1)
             data(:,jj)=data_this_trial(floor((ii-1)*handles.draq_p.ActualRate*handles.draq_p.sec_per_trigger)+1:...
                 floor((ii-1)*handles.draq_p.ActualRate*handles.draq_p.sec_per_trigger)...
                 +floor(handles.draq_p.ActualRate*handles.draq_p.sec_per_trigger)-2000);
+            
             jj=jj+1;
         end
+        
     else
         fid=fopen(handles.drta_p.draName,'rb');
         %Note: two bytes per sample (uint16)
@@ -30,14 +31,24 @@ if handles.par.dgorrhd==1
         size_per_ch_bytes=handles.draq_p.sec_per_trigger*handles.draq_p.ActualRate*bytes_per_native;
         no_unit16_per_ch=size_per_ch_bytes/bytes_per_native;
         trial_offset=handles.draq_p.no_chans*size_per_ch_bytes*(trialNo-1);
+        data_this_trial=[];
         for ii=1:handles.draq_p.no_chans
             fseek(fid, (ii-1)*size_per_ch_bytes+trial_offset, 'bof');
-            data(:,ii)=fread(fid,no_unit16_per_ch,'uint16');
+            data_this_trial(:,ii)=fread(fid,no_unit16_per_ch,'uint16');
         end
         
-        
         fclose(fid);
+        
+        jj=1;
+        data=[];
+        for ii=1+4*(handles.drta_p.tets-1):4+4*(handles.drta_p.tets-1)
+            data(:,jj)=data_this_trial(:,ii);
+            data_sub(:,jj)=data_this_trial(:,handles.drta_p.subtractCh(ii));
+            jj=jj+1;
+        end
     end
+    
+    
     
     exc_ch=[];
     
@@ -73,6 +84,7 @@ else
     data=[];
     for ii=1+4*(handles.drta_p.tets-1):4+4*(handles.drta_p.tets-1)
         data(:,jj)=data_this_trial(:,ii);
+        data_sub(:,jj)=data_this_trial(:,handles.drta_p.subtractCh(ii));
         jj=jj+1;
     end
     

@@ -1143,9 +1143,9 @@ there_is_a_space = findSpaces(handles);
 if there_is_a_space==1
     h=msgbox('There is a space in either the directory or the filename, please fix!!"')
 else
-    
+     
     first_file=handles.files{1};
-    
+
     set(handles.whichFile,'String',first_file);
     
     if strcmp(first_file(end-2:end),'rhd')
@@ -1157,6 +1157,7 @@ else
         handles.dg_or_rhd=1;
         load_run_dg_Callback(hObject, eventdata, handles);
     end
+    
     
     
 end

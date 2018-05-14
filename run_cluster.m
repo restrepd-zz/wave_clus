@@ -11,12 +11,33 @@ function [clu, tree] = run_cluster(handles)
 % /bin/bash: ./cluster_maci.exe: Permission denied
 %
 % in that example name the directory: 'Problem_10_20' 
+% 
+% If you get this error the name of the file is too long!
+% error:
+% at line 74 of 'param.c': too long
+% Error using load
+% Unable to read file
+% 'times_tetr1_20180502_5118_spm_iso_mo_180502_100240.dg_01'. No such file
+% or directory.
+% 
+% Error in run_cluster (line 102)
+% tree=load([fname '.dg_01']);
 
 dim=handles.par.inputs;
 if handles.par.dgorrhd==1
-    fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:end-3)];
+    %dg
+    if length(handles.par.filename)<=27
+        fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:end-3)];
+    else
+        fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:28)];
+    end
 else
-    fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:end-4)];
+    %rhd
+    if length(handles.par.filename)<=28
+        fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:end-4)];
+    else
+        fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:28)];
+    end
 end
 fname_in=handles.par.fname_in;
 %set(handles.file_name,'string','Running SPC ...');

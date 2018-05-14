@@ -21,7 +21,7 @@ ref=w_post;
 % fmin_sort = handles.par.sort_fmin;
 % fmax_sort = handles.par.sort_fmax;
 
-[data, exc_ch] = getTraceDatadrdg(handles);
+[data, data_sub, exc_ch] = getTraceDatadrdg(handles);
 
  
 if (handles.drta_p.doSubtract==1)
@@ -30,11 +30,9 @@ if (handles.drta_p.doSubtract==1)
         if handles.drta_p.subtractCh(4*(tetr-1)+jj)<=18
             if handles.drta_p.subtractCh(4*(tetr-1)+jj)<=16
                 %Subtract one of the channels
-                if (handles.drta_p.subtractCh((tetr-1)*4+jj)-(tetr-1)*4>=1)&(handles.drta_p.subtractCh((tetr-1)*4+jj)-(tetr-1)*4<=4)
-                    data1(:,jj)=data(:,jj)-data(:,handles.drta_p.subtractCh((tetr-1)*4+jj)-(tetr-1)*4);  
-                else
-                    error('Error; Channel subtracted must be within the tetrode, go back to drta!')
-                end
+                
+                    data1(:,jj)=data(:,jj)-data_sub(:,jj);  
+                
             else
                 if handles.drta_p.subtractCh(4*(tetr-1)+jj)==17
                     %Subtract tetrode mean
@@ -48,31 +46,7 @@ if (handles.drta_p.doSubtract==1)
     end
 end
 
-% FILTER THE DATA
-%Filter between 1000 and 5000
-% [b,a] = butter(2,[handles.drta_p.low_filter/(handles.draq_p.ActualRate/2) handles.drta_p.high_filter/(handles.draq_p.ActualRate/2)]);
-% if (handles.drta_p.doSubtract==1)
-%     xf =filtfilt(b,a,data1);
-% else
-%     xf =filtfilt(b,a,data);
-% end
-
-% Fstop1 = 800;
-% Fpass1 = 1000;
-% Fpass2 = 2800;
-% Fstop2 = 3000;
-% Astop1 = 65;
-% Apass  = 0.5;
-% Astop2 = 65;
-% Fs = handles.draq_p.ActualRate;
-% 
-% d = designfilt('bandpassfir', ...
-%     'StopbandFrequency1',Fstop1,'PassbandFrequency1', Fpass1, ...
-%     'PassbandFrequency2',Fpass2,'StopbandFrequency2', Fstop2, ...
-%     'StopbandAttenuation1',Astop1,'PassbandRipple', Apass, ...
-%     'StopbandAttenuation2',Astop2, ...
-%     'DesignMethod','equiripple','SampleRate',Fs);
-
+% FILTER THE DATA between 1000 and 5000 Hz
 d = designfilt('bandpassiir','FilterOrder',20, ...
     'HalfPowerFrequency1',1000,'HalfPowerFrequency2',5000, ...
     'SampleRate',floor(handles.draq_p.ActualRate));
@@ -84,11 +58,6 @@ else
 end
 
 %Now setup thresholds
-% noise_std_detect = median(abs(xf_detect))/0.6745;
-% noise_std_sorted = median(abs(xf))/0.6745;
-% thr = stdmin * noise_std_detect;        %thr for detection is based on detect settings.
-% thrmax = stdmax * noise_std_sorted;     %thrmax for artifact removal is based on sorted settings.
-
 set(handles.file_name,'string','Detecting spikes ...');
 
 for (ii=1:4)
