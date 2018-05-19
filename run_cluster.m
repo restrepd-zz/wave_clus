@@ -29,7 +29,7 @@ if handles.par.dgorrhd==1
     if length(handles.par.filename)<=27
         fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:end-3)];
     else
-        fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:28)];
+        fname=['times_tetr' num2str(handles.drta_p.tets) '_' handles.par.filename(1:27)];
     end
 else
     %rhd

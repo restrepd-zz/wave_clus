@@ -10,27 +10,33 @@ function [L, Lratio, df] = L_Ratio(Fet, ClusterSpikes, m)
 %           m:             squared mahalanobis distances, default is to
 %                          calculate them directly
 
-% find # of spikes in this cluster
-if nargin < 3
-	nSpikes = size(Fet,1);
-else
-	nSpikes = size(m,1);
+try
+    % find # of spikes in this cluster
+    if nargin < 3
+        nSpikes = size(Fet,1);
+    else
+        nSpikes = size(m,1);
+    end
+    
+    nClusterSpikes = length(ClusterSpikes);
+    
+    % mark spikes which are not cluster members
+    NoiseSpikes = setdiff(1:nSpikes, ClusterSpikes);
+    
+    %%%%%%%%%%% compute mahalanobis distances %%%%%%%%%%%%%%%%%%%%%
+    if nargin < 3
+        m = mahal(Fet, Fet(ClusterSpikes,:));
+    end
+    
+    mCluster = m(ClusterSpikes); % mahal dist of spikes in the cluster
+    mNoise = m(NoiseSpikes); % mahal dist of all other spikes
+    
+    df = size(Fet,2);
+    
+    L = sum(1-chi2cdf(m(NoiseSpikes),df));
+    Lratio = L/nClusterSpikes;
+catch
+    L=-1;
+    Lratio=-1;
+    df=0;
 end
-
-nClusterSpikes = length(ClusterSpikes);
-
-% mark spikes which are not cluster members
-NoiseSpikes = setdiff(1:nSpikes, ClusterSpikes);
-
-%%%%%%%%%%% compute mahalanobis distances %%%%%%%%%%%%%%%%%%%%%
-if nargin < 3
-	m = mahal(Fet, Fet(ClusterSpikes,:));
-end
-
-mCluster = m(ClusterSpikes); % mahal dist of spikes in the cluster
-mNoise = m(NoiseSpikes); % mahal dist of all other spikes
-
-df = size(Fet,2);
-
-L = sum(1-chi2cdf(m(NoiseSpikes),df));
-Lratio = L/nClusterSpikes;

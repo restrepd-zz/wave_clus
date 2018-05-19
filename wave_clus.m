@@ -211,7 +211,15 @@ switch char(handles.datatype)
         %clu=load(['times_ch' num2str(handles.drta_p.which_display) '_' fname '.dg_01.lab']);
         %Note: In this version clu is coming from times_ch
         load(['times_tetr' num2str(handles.drta_p.which_display) '_' fname '.mat']);
-        tree=load(['times_tetr' num2str(handles.drta_p.which_display) '_' fname '.dg_01']);
+         
+        %The length of the dg_01 file was shortened because of a problem in
+        %handling long file names by the c code in run_cluster
+        if length(fname)>27
+            tree=load(['times_tetr' num2str(handles.drta_p.which_display) '_' fname(1:27) '.dg_01']);
+        else
+            tree=load(['times_tetr' num2str(handles.drta_p.which_display) '_' fname '.dg_01']);
+        end
+        
         handles.par.fnamespc = fname;
         
         one_ch_file=['times_tetr' num2str(handles.drta_p.which_display) '_' fname '.mat'];
