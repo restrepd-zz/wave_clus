@@ -110,25 +110,32 @@ else
     board_adc_data = 50.354e-6 * board_adc_data; % units = volts
 end
 
-%Enter the digital input channel
-digital_input=board_dig_in_data(1,:)+2*board_dig_in_data(2,:)+4*board_dig_in_data(3,:)...
-    +8*board_dig_in_data(4,:)+16*board_dig_in_data(5,:)+32*board_dig_in_data(6,:)...
-    +64*board_dig_in_data(7,:);
+
 
 %Setup the output as used by drta
-data_this_trial=zeros(length(digital_input),22);
+szad=size(amplifier_data);
+data_this_trial=zeros(szad(2),22);
 
 %Enter the electrode recordings
 data_this_trial(:,1:16)=amplifier_data';
 
 
-%Enter the trigger (bit 8)
-data_this_trial(:,17)=1000*board_dig_in_data(8,:);
-
-%Enter the four votage inputes: shiff, lick, photodiode and laser trigger
-data_this_trial(:,18:21)=board_adc_data(1:4,:)';
-
-data_this_trial(:,22)=digital_input;
+try
+    digital_input=board_dig_in_data(1,:)+2*board_dig_in_data(2,:)+4*board_dig_in_data(3,:)...
+        +8*board_dig_in_data(4,:)+16*board_dig_in_data(5,:)+32*board_dig_in_data(6,:)...
+        +64*board_dig_in_data(7,:);
+    
+    
+    
+    %Enter the trigger (bit 8)
+    data_this_trial(:,17)=1000*board_dig_in_data(8,:);
+    
+    %Enter the four votage inputes: shiff, lick, photodiode and laser trigger
+    data_this_trial(:,18:21)=board_adc_data(1:4,:)';
+    
+    data_this_trial(:,22)=digital_input;
+catch
+end
 
 return
 

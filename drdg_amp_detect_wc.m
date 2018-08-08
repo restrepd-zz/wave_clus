@@ -46,9 +46,9 @@ if (handles.drta_p.doSubtract==1)
     end
 end
 
-% FILTER THE DATA between 1000 and 5000 Hz
+% FILTER THE DATA between 500 and 5000 Hz
 d = designfilt('bandpassiir','FilterOrder',20, ...
-    'HalfPowerFrequency1',1000,'HalfPowerFrequency2',5000, ...
+    'HalfPowerFrequency1',500,'HalfPowerFrequency2',5000, ...
     'SampleRate',floor(handles.draq_p.ActualRate));
 
 if (handles.drta_p.doSubtract==1)
