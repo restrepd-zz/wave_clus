@@ -85,7 +85,8 @@ switch feature
         
         %Now add PCA
         for tetr=1:4
-            [C,S,L] = princomp(spikes(:,:,tetr));
+            [C,S,L] = pca(spikes(:,:,tetr));
+%             [C,S,L] = princomp(spikes(:,:,tetr));
             cc(:,ls*4+1+3*(tetr-1):ls*4+3+3*(tetr-1)) = S(:,1:3);
         end
         
