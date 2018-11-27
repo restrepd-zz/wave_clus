@@ -1126,7 +1126,7 @@ function load_and_run_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[files,path]=uigetfile({'*.dg';'*.rhd'}, 'Select dg or rhd files for wave_clus batch analysis', 'MultiSelect', 'on');
+[files,path]=uigetfile({'*.rhd';'*.dg'}, 'Select rhd or dg files for wave_clus batch analysis', 'MultiSelect', 'on');
 handles.directory=path(1:end-1);
 
 if ischar(files)
