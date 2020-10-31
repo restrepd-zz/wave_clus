@@ -60,7 +60,7 @@ for i=1:inputs
     end
 end
 
-[coefs,scores,variances,t2] = princomp(inspk);
+[coefs,scores,variances,t2] = pca(inspk);
 figure(12)
 start_class=1;
 for k=start_class:nclasses

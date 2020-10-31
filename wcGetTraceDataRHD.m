@@ -102,12 +102,14 @@ end
 % Scale voltage levels appropriately.
 amplifier_data = 0.195 * (amplifier_data - 32768); % units = microvolts
 
-if (handles.draq_d.eval_board_mode == 1)
-    board_adc_data = 152.59e-6 * (board_adc_data - 32768); % units = volts
-elseif (handles.draq_d.eval_board_mode == 13) % Intan Recording Controller
-    board_adc_data = 312.5e-6 * (board_adc_data - 32768); % units = volts
-else
-    board_adc_data = 50.354e-6 * board_adc_data; % units = volts
+if exist('board_adc_data')~=0
+    if (handles.draq_d.eval_board_mode == 1)
+        board_adc_data = 152.59e-6 * (board_adc_data - 32768); % units = volts
+    elseif (handles.draq_d.eval_board_mode == 13) % Intan Recording Controller
+        board_adc_data = 312.5e-6 * (board_adc_data - 32768); % units = volts
+    else
+        board_adc_data = 50.354e-6 * board_adc_data; % units = volts
+    end
 end
 
 
@@ -117,7 +119,11 @@ szad=size(amplifier_data);
 data_this_trial=zeros(szad(2),22);
 
 %Enter the electrode recordings
-data_this_trial(:,1:16)=amplifier_data';
+if handles.drta_p.which_c_program~=13
+    data_this_trial(:,1:16)=amplifier_data';
+else
+    data_this_trial(:,1:16)=amplifier_data(9:24,:)';
+end
 
 
 try
