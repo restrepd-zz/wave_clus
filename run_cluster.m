@@ -109,7 +109,7 @@ while keep_clustering==1
             run_linux = sprintf('./cluster_linux.exe %s.run',fname);
             unix(run_linux);
     end
-    
+     
     try
         clu=load([fname '.dg_01.lab']);
         keep_clustering=0;

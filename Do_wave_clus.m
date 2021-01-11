@@ -788,7 +788,7 @@ if an_error==0
         % CALCULATES INPUTS TO THE CLUSTERING ALGORITHM.
         if nspk>0
             [inspk, f_str] = wave_features_drdg(spikes,handles);              %takes wavelet coefficients.
-            for ii=1:10
+            for ii=1:length(f_str)
                 f_strings{tets,ii}=f_str{ii};
             end
             

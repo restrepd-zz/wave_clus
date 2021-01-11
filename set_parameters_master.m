@@ -19,7 +19,8 @@ par.force_feature = 'spk';          % feature use for forcing (whole spike shape
 par.features = 'all'                % wavelets, PCA and peak-valley value are used for sorting
 
 
-par.feature_points=24;              % Number of points used to calculate the features, this used to be 24
+par.feature_points=48;              % Number of points used to calculate the features, for olfactory bulb we used 24
+                                    %For hippocampus/prefrontal we are using 48
 par.inputs = 10;                    %number of inputs to the clustering
 par.scales = 4;                     %scales for wavelet decomposition
 if strcmp(par.features,'pca');      %number of inputs to the clustering for pca
@@ -49,8 +50,9 @@ par.max_histos=8;
 
 
 %GET SPIKES prameters
-par.w_pre=12;                       %number of pre-event data points stored
-par.w_post=12;                      %number of post-event data points stored
+par.w_pre=par.feature_points/2;     %number of pre-event data points stored, for olfactory bulb we used 12
+                                    %for hippocampus/prefrontal we used par.feature_points/2 = 24
+par.w_post=par.feature_points/2;    %number of post-event data points stored, for olfactory bulb we used 12
 par.interpolation = 'y';            %interpolation for alignment
 par.int_factor = 2;                 %interpolation factor
 par.detect_fmin = 300;              %high pass filter for detection
