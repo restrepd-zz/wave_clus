@@ -29,7 +29,7 @@ Then run wave_clus for each tetrode
 
 ## Output
 
-The output is saved in a joint_name.mat file
+The output of Do_wave_clus is saved in a joint_name.mat file
 
 offset_for_chan has the offset in all_timestamp for spikes for each tetrode
 
@@ -37,4 +37,13 @@ all_timestamp is a vector with all spike times in seconds
 
 cluster_class is a two column vector. The first column has the ID for each spike. 0 were the rejected spikes, 1 to n are the sorted spikes. The second column has the index for the spike in the rhd file. Note that timestamp=index/acquisition rate.
 
- 
+
+The output of wave_clus is saved in the jt_times_name.mat file
+
+offset_for_chan has the offset in all_timestamp_per_file for spikes for each tetrode
+
+all_timestamp_per_file is a vector with all spike times in seconds
+
+cluster_class_per_file has the cluster ID for each spike. 0 were the rejected spikes, 1 to n are the sorted spikes.
+
+Important: Use the data in the jt_times file (not in the joint file) for spike time analysis!!

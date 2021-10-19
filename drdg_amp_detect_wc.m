@@ -192,57 +192,62 @@ if nspk>0
         %Is the next spike within the extent of this one?
         if ii+1<length(index)
             if index(ii+1)-index(ii) <= ls
-                %Choose the larger spike
-                deltaii=max(xf(index(ii)-w_pre+2:index(ii)+w_post-2,elect_no(ii)))-min(xf(index(ii)-w_pre+2:index(ii)+w_post-2,elect_no(ii)));
-                deltaii1=max(xf(index(ii+1)-w_pre+2:index(ii+1)+w_post-2,elect_no(ii+1)))-min(xf(index(ii+1)-w_pre+2:index(ii+1)+w_post-2,elect_no(ii+1)));
-                if deltaii>deltaii1
-                    aux(jj)=ii+1;
-                    lastii=ii;
-                    jj=jj+1;
-                else
-                    aux(jj)=ii;
-                    lastii=ii+1;
-                    jj=jj+1;
-                end
-                no_steps=1;
-                
-                %See if the next one is the same event
-                if ii+2<length(index)
-                    if index(ii+2)-index(ii) <= ls
-                        deltaii=max(xf(index(lastii)-w_pre+2:index(lastii)+w_post-2,elect_no(lastii)))-min(xf(index(lastii)-w_pre+2:index(lastii)+w_post-2,elect_no(lastii)));
-                        deltaii1=max(xf(index(ii+2)-w_pre+2:index(ii+2)+w_post-2,elect_no(ii+2)))-min(xf(index(ii+2)-w_pre+2:index(ii+2)+w_post-2,elect_no(ii+2)));
-                        if deltaii>deltaii1
-                            aux(jj)=ii+2;
-                            jj=jj+1;
-                        else
-                            aux(jj)=lastii;
-                            lastii=ii+2;
-                            jj=jj+1;
-                        end
-                        no_steps=2;
-                        
-                        %One more time see if the next one is the same event
-                        if ii+3<length(index)
-                            if index(ii+3)-index(ii) <= ls
+                if index(ii+1)+w_post-2<=size(xf,1)
+                    %Choose the larger spike
+                    deltaii=max(xf(index(ii)-w_pre+2:index(ii)+w_post-2,elect_no(ii)))-min(xf(index(ii)-w_pre+2:index(ii)+w_post-2,elect_no(ii)));
+                    deltaii1=max(xf(index(ii+1)-w_pre+2:index(ii+1)+w_post-2,elect_no(ii+1)))-min(xf(index(ii+1)-w_pre+2:index(ii+1)+w_post-2,elect_no(ii+1)));
+                    if deltaii>deltaii1
+                        aux(jj)=ii+1;
+                        lastii=ii;
+                        jj=jj+1;
+                    else
+                        aux(jj)=ii;
+                        lastii=ii+1;
+                        jj=jj+1;
+                    end
+                    no_steps=1;
+                    
+                    %See if the next one is the same event
+                    if ii+2<length(index)
+                        if index(ii+2)-index(ii) <= ls
+                            if index(ii+2)+w_post-2<=size(xf,1)
                                 deltaii=max(xf(index(lastii)-w_pre+2:index(lastii)+w_post-2,elect_no(lastii)))-min(xf(index(lastii)-w_pre+2:index(lastii)+w_post-2,elect_no(lastii)));
-                                deltaii1=max(xf(index(ii+3)-w_pre+2:index(ii+3)+w_post-2,elect_no(ii+3)))-min(xf(index(ii+3)-w_pre+2:index(ii+3)+w_post-2,elect_no(ii+3)));
+                                deltaii1=max(xf(index(ii+2)-w_pre+2:index(ii+2)+w_post-2,elect_no(ii+2)))-min(xf(index(ii+2)-w_pre+2:index(ii+2)+w_post-2,elect_no(ii+2)));
                                 if deltaii>deltaii1
-                                    aux(jj)=ii+3;
+                                    aux(jj)=ii+2;
                                     jj=jj+1;
                                 else
                                     aux(jj)=lastii;
-                                    lastii=ii+3;
+                                    lastii=ii+2;
                                     jj=jj+1;
                                 end
-                                no_steps=3;
+                                no_steps=2;
+                                
+                                %One more time see if the next one is the same event
+                                if ii+3<length(index)
+                                    if index(ii+3)-index(ii) <= ls
+                                        if index(ii+3)+w_post-2<=size(xf,1)
+                                            deltaii=max(xf(index(lastii)-w_pre+2:index(lastii)+w_post-2,elect_no(lastii)))-min(xf(index(lastii)-w_pre+2:index(lastii)+w_post-2,elect_no(lastii)));
+                                            deltaii1=max(xf(index(ii+3)-w_pre+2:index(ii+3)+w_post-2,elect_no(ii+3)))-min(xf(index(ii+3)-w_pre+2:index(ii+3)+w_post-2,elect_no(ii+3)));
+                                            if deltaii>deltaii1
+                                                aux(jj)=ii+3;
+                                                jj=jj+1;
+                                            else
+                                                aux(jj)=lastii;
+                                                lastii=ii+3;
+                                                jj=jj+1;
+                                            end
+                                            no_steps=3;
+                                        end
+                                    end
+                                end
                             end
                         end
-                        
                     end
+                    
+                    
+                    ii=ii+no_steps;
                 end
-                
-                
-                ii=ii+no_steps;
             end
         end
     end
@@ -254,7 +259,7 @@ if nspk>0
     %Get rid of artifacts >=thrmax
     spikes=zeros(nspk,ls+4,4);
     xf=[xf; zeros(w_post,4)];
-
+    
     jj=1;
     for i=1:nspk                          %Eliminates artifacts
         save_spike=1;
